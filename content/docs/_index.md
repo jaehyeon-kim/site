@@ -1,4 +1,4 @@
----
+<!-- ---
 title: Docs
 menu:
   main:
@@ -7,4 +7,4 @@ menu:
       icon: '<i class="fas fa-fw fa-file text-success"></i>'
 ---
 
-The example of Docs layout.
+The example of Docs layout. -->

@@ -9,17 +9,17 @@ toc: true
 reward: true
 pinned: false
 carousel: true
-series:
-  - News
-categories:
-  - Image
-tags: 
-  - Crop
-  - Fit
-  - Fill
-  - Filters
-authors:
-  - RazonYang
+# series:
+#   - News
+# categories:
+#   - Image
+# tags: 
+#   - Crop
+#   - Fit
+#   - Fill
+#   - Filters
+# authors:
+#   - RazonYang
 images: []
 ---
 

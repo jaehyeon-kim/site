@@ -1,12 +1,12 @@
 mainSections:
   - blog
   - posts
-  - news
+  # - news
 
 # titleSeparator: '|' # Title separator. Default to -.
 
-description: An extreme fast, responsive and feature-rich blog theme for Hugo
-keywords: Hugo, Bootstrap, Blog Theme
+description: #An extreme fast, responsive and feature-rich blog theme for Hugo
+keywords: AWS, Data, Analytics, Containers, Serverless
 # images:
 #   - site-feature-image.jpg
 
@@ -14,10 +14,10 @@ keywords: Hugo, Bootstrap, Blog Theme
 # metaRobots:  # disable Meta Tag robots
 
 # logo: images/logo.png # Logo image. Default to images/logo.webp.
-# logo: false # Disable Logo
-brand: HBS
+logo: false # Disable Logo
+brand: Jaehyeon Kim
 
-palette: purple # Default palette. Optional. You'll need to clear the browser cache after modifying this.
+palette: blue-gray # Default palette. Optional. You'll need to clear the browser cache after modifying this.
 # Available palettes. Default to ALL. Empty array means disable.
 # palettes:
 #  - blue
@@ -33,7 +33,7 @@ palette: purple # Default palette. Optional. You'll need to clear the browser ca
 #  - teal
 #  - yellow
 
-# color: dark # light, dark or auto. Default to auto.
+color: dark # light, dark or auto. Default to auto.
 
 # fullWidth: true # Full width.
 # fixedHeader: false # Turn on/off fixed header.
@@ -43,19 +43,19 @@ palette: purple # Default palette. Optional. You'll need to clear the browser ca
 # Google Adsense
 googleAdsense: 
 
-# math: true # Enable math globally.
-# toc: false # Disable TOC globally.
-# tocPosition: content
-# breadcrumb: false # Disable breadcrumb
-# breadcrumbDivider: > # Breadcrumb divider
-# diagram: true
-# socialShare: false # disable social network sharing
-# searchBar: false # disable search-bar
+math: true # Enable math globally.
+toc: true # Disable TOC globally.
+tocPosition: content
+breadcrumb: false # Disable breadcrumb
+breadcrumbDivider: > # Breadcrumb divider
+diagram: true
+socialShare: false # disable social network sharing
+searchBar: true # disable search-bar
 
-# poweredBy: false # Whether to show powered by.
+poweredBy: false # Whether to show powered by.
 
-# readingTime: false # Whether to display the reading time.
-# postDate: false # Whether to display the post date in the post meta section.
+readingTime: true # Whether to display the reading time.
+postDate: true # Whether to display the post date in the post meta section.
 
 # featuredPostCount: 10 # The number of featured posts shown in sidebar. Turn off by setting it to false.
 # recentPostCount: 10 # The number of recent posts shown in sidebar. Turn off by setting it to false.
@@ -67,9 +67,9 @@ googleAdsense:
 taxonomyPostCount: 20 # The number of taxonomy's posts. Turn off by setting it to false.
 countTaxonomyPosts: true # Count posts of taxonomy.
 
-# sidebarTaxonomies: [categories, tags, series] # The order of taxonomies on the sidebar.
+sidebarTaxonomies: [categories, tags, series] # The order of taxonomies on the sidebar.
 
-# pinnedPost: false # Turn on/off pinned posts.
+pinnedPost: false # Turn on/off pinned posts.
 pinnedPostCount: 3 # The number of pinned posts.
 
 # Custom CSS and JS
@@ -105,7 +105,7 @@ codeBlock:
 post:
   # excerpt: description
   # excerptMaxLength: 120
-  # copyright: false # Whether to display copyright section on each post.
+  copyright: false # Whether to display copyright section on each post.
   # plainifyExcerpt: false # Format excerpt in HTML if false.
   featuredImage: true # Show the featured image above the content.
   numberifyHeadings: true # Count headings automatically.
@@ -144,7 +144,7 @@ creativeCommons:
   # sa: true # Adaptations must be shared under the same terms.
 
 utterances:
-  repo: razonyang/hugo-theme-bootstrap-skeleton # Replace with your repository.
+  repo: jaehyeon-kim/site # Replace with your repository.
   #issueTerm: pathname # pathname, url, title, og:title
   label: comment
   # By default, light and dark mode correspond to github-light and github-dark, respectively.
@@ -203,8 +203,8 @@ search:
   # debug: true
 
 reward:
-  alipay: images/reward/alipay.png
-  wechat: images/reward/wechat.png
+  # alipay: images/reward/alipay.png
+  # wechat: images/reward/wechat.png
   #paypal: images/reward/paypal.png
   #patreon: images/reward/patreon.png
   #liberapay: images/reward/liberapay.png
@@ -224,8 +224,8 @@ fontSize:
 
 pwa:
   manifest:
-    # name:  # Default to site title.
-    short_name: HBS
+    name: Jaehyeon's Site # Default to site title.
+    short_name: JK
     # display: fullscreen # Default to standalone.
     # description:  # Default to site description.
     # theme_color: 
@@ -240,14 +240,14 @@ pwa:
     #   src: /images/icons/icon-144x144.png
 
 contact:
-  endpoint: https://getform.io/f/56041c81-9e03-4c24-b9c5-61238854d4cd # Backend endpoint, remove this line if you're using Netlify.
+  # endpoint: https://getform.io/f/56041c81-9e03-4c24-b9c5-61238854d4cd # Backend endpoint, remove this line if you're using Netlify.
   # file: true # Enable file upload
   # fileField: image # The name of file field.
   # reCaptcha:
     # siteKey: ""
 
 repo:
-  url: https://github.com/razonyang/hugo-theme-bootstrap-skeleton
+  url: https://github.com/jaehyeon-kim/site
   branch: main
   # subPath: exampleSite
   # dateFormat: 02/01/2006, 15:04:05 PM
@@ -255,9 +255,10 @@ repo:
 topAppBar:
   # See https://hbs.razonyang.com/v1/en/docs/widgets/social-links/.
   social:
-    github: razonyang/hugo-theme-bootstrap
-    patreon: razonyang
-    paypal: razonyang
+    github: jaehyeon-kim/site
+    linkedin: jaehyeon-kim-76b93429
+    # patreon: razonyang
+    # paypal: razonyang
 
 #docs:
   # nav:

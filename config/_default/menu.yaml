@@ -3,4 +3,4 @@ main:
     identifier: blog
     params:
       icon: '<i class="fas fa-fw fa-blog text-warning"></i>'
-      description: 'Blog Menu Description'
+      description: #'Blog Menu'

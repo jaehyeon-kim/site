@@ -1,7 +1,7 @@
 baseURL: /
-title: Hugo Bootstrap Skeleton
+title: Jaehyeon's Personal Site
 theme: github.com/razonyang/hugo-theme-bootstrap
-copyright: 'Copyright © 2016-{year} Razon Yang. All Rights Reserved.'
+copyright: 'Copyright © 2023-{year} Jaehyeon Kim. All Rights Reserved.'
 defaultContentLanguage: en
 # hasCJKLanguage: true # Uncomment it if your content contains Chinese/Japanese/Korean Languages.
 # defaultContentLanguageInSubdir: true
@@ -24,7 +24,7 @@ taxonomies:
   category: categories
   series: series
   tag: tags
-  authors: authors
+  # authors: authors
 
 build:
   writeStats: true
