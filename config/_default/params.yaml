@@ -99,8 +99,8 @@ sidebar:
   # collapsed: true # Collapse sidebar widgets by default on small screens.
 
 codeBlock:
-  # maxLines: 8
-  lineNos: false # true/false represents that show/hide the line numbers by default.
+  maxLines: 10
+  lineNos: true # true/false represents that show/hide the line numbers by default.
 
 post:
   # excerpt: description
@@ -108,11 +108,11 @@ post:
   copyright: false # Whether to display copyright section on each post.
   # plainifyExcerpt: false # Format excerpt in HTML if false.
   featuredImage: true # Show the featured image above the content.
-  numberifyHeadings: true # Count headings automatically.
+  numberifyHeadings: false # Count headings automatically.
   # numberifyHeadingsEndLevel: 4 # The depth of headings to count. Default to 6.
   numberifyHeadingsSeparator: . # The separator between of number and headings.
   # tocStyleType: decimal # The TOC's CSS list-style-type property.
-  # imageTitleAsCaption: true
+  imageTitleAsCaption: true
   # panel: false # Disable the post panel.
   # nav: false # Disable post navigations.
   # The page position after clicking the read more button, read more from content if true. Default to the beginning of page.
