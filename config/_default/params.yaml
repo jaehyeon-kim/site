@@ -13,8 +13,8 @@ keywords: AWS, Data, Analytics, Containers, Serverless
 # metaRobots: noindex, nofollow # Default value for Meta Tag robots
 # metaRobots:  # disable Meta Tag robots
 
-# logo: images/logo.png # Logo image. Default to images/logo.webp.
-logo: false # Disable Logo
+logo: images/logo.png # Logo image. Default to images/logo.webp.
+# logo: false # Disable Logo
 brand: Jaehyeon Kim
 
 palette: blue-gray # Default palette. Optional. You'll need to clear the browser cache after modifying this.
