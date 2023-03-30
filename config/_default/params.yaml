@@ -45,8 +45,8 @@ googleAdsense:
 
 math: true # Enable math globally.
 toc: true # Disable TOC globally.
-tocPosition: content
-breadcrumb: false # Disable breadcrumb
+tocPosition: content # sidebar or content
+breadcrumb: true # Disable breadcrumb
 breadcrumbDivider: > # Breadcrumb divider
 diagram: true
 socialShare: false # disable social network sharing
