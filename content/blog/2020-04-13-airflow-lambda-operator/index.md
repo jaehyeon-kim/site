@@ -17,7 +17,7 @@ categories:
 tags: 
   - Airflow
   - AWS
-  - Lambda
+  - AWS Lambda
   - Python
   - Docker
   - Docker Compose

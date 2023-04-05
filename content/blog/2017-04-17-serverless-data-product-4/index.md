@@ -16,13 +16,13 @@ categories:
   - Serverless
 tags: 
   - AWS
-  - Lambda
-  - API Gateway
+  - AWS Lambda
+  - Amazon S3
+  - Amazon API Gateway
   - R
   - Python
   - CloudFront
-  - Route53
-  - S3
+  - Route53  
   - React
 authors:
   - JaehyeonKim

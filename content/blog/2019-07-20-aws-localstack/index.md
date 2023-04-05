@@ -19,7 +19,7 @@ tags:
   - AWS
   - Docker
   - Docker Compose
-  - Lambda
+  - AWS Lambda
   - S3
   - SQS
   - Python

@@ -16,8 +16,8 @@ categories:
   - Serverless
 tags: 
   - AWS
-  - Lambda
-  - API Gateway
+  - AWS Lambda
+  - Amazon API Gateway
   - R
   - Python
 authors:
@@ -25,9 +25,9 @@ authors:
 images: []
 ---
 
-In the [previous post](/blog/2017-04-08-serverless-data-product-1), **serverless** **event-driven** application development is introduced. Also how to package R, necessary libraries/packages and a Lambda function handler is discussed. No need of provising/managing servers is one of the key benefits of the architecture. It is also a cost-effective way of delivering a data product as functions are executed *on-demand* rather than in servers that run 24/7. Furthermore [AWS Lambda free tier](https://aws.amazon.com/lambda/pricing/) includes 1M free requests per month and 400,000 GB-seconds of compute time per month, which is available to both existing and new AWS customers indefinitely. (GB-seconds is applicable when execution is made with 1 GB of memory.) Lowering the size of memory increases the execution time and thus 3.2M seconds or about 37 days are free with 128 MB of memory (1 GB divided by 8) - note that CPU power is proportional to allocated memory.
+In the [previous post](/blog/2017-04-08-serverless-data-product-1), **serverless** **event-driven** application development is introduced. Also how to package R, necessary libraries/packages and a Lambda function handler is discussed. No need of provisioning/managing servers is one of the key benefits of the architecture. It is also a cost-effective way of delivering a data product as functions are executed *on-demand* rather than in servers that run 24/7. Furthermore [AWS Lambda free tier](https://aws.amazon.com/lambda/pricing/) includes 1M free requests per month and 400,000 GB-seconds of compute time per month, which is available to both existing and new AWS customers indefinitely. (GB-seconds is applicable when execution is made with 1 GB of memory.) Lowering the size of memory increases the execution time and thus 3.2M seconds or about 37 days are free with 128 MB of memory (1 GB divided by 8) - note that CPU power is proportional to allocated memory.
 
-Initially I was planning to discuss how to deploy a package at AWS Lambda and to expose it via Amazon API Gateway in this post. However it'd be too long with so many screen shots and I split them in Part II and III. Here is an updated series plan.
+Initially I was planning to discuss how to deploy a package at AWS Lambda and to expose it via Amazon API Gateway in this post. However it'd be too long with so many screenshots and I split them in Part II and III. Here is an updated series plan.
 
 * Backend
     * [Packaging R for AWS Lambda - Part I](/blog/2017-04-08-serverless-data-product-1)
@@ -36,11 +36,11 @@ Initially I was planning to discuss how to deploy a package at AWS Lambda and to
 * Frontend
     * [Serving a single page application from Amazon S3 - Part IV](/blog/2017-04-17-serverless-data-product-4)
 
-[**EDIT 2017-04-17**] The Lambda function hander (*handler.py*) has been modified to resolve an issue of *Cross-Origin Resource Sharing (CORS)*. See [Part IV](/blog/2017-04-17-serverless-data-product-4) for further details.
+[**EDIT 2017-04-17**] The Lambda function handler (*handler.py*) has been modified to resolve an issue of *Cross-Origin Resource Sharing (CORS)*. See [Part IV](/blog/2017-04-17-serverless-data-product-4) for further details.
 
 ## Managing security
 
-Before deploying a Lambda package, it is necessary to understand the security framework provided by AWS mostly based on [AWS Identity and Access Management (IAM)](https://aws.amazon.com/documentation/iam/). To use AWS services (eg downloading a file from S3), AWS needs to identify the user or service (eg AWS Lambda) that makes the API call - this is the **authentication**. Also it needs to be checked whether the user or service has the permission - this is the **authorization**. For example, for this POC product development, I created a user and authentication is made by permanent credentials (*Access Key ID* and *Secret Access Key*) given to the user. Authorization is managed by *policy* and the following 3 AWS managed policies are attached to the user.
+Before deploying a Lambda package, it is necessary to understand the security framework provided by AWS mostly based on [AWS Identity and Access Management (IAM)](https://aws.amazon.com/documentation/iam/). To use AWS services (e.g. downloading a file from S3), AWS needs to identify the user or service (eg AWS Lambda) that makes the API call - this is the **authentication**. Also it needs to be checked whether the user or service has the permission - this is the **authorization**. For example, for this POC product development, I created a user and authentication is made by permanent credentials (*Access Key ID* and *Secret Access Key*) given to the user. Authorization is managed by *policy* and the following 3 AWS managed policies are attached to the user.
 
 * AWSLambdaFullAccess
 * AmazonAPIGatewayAdministrator
@@ -60,7 +60,7 @@ Note that this section is based on the Ch4 of [AWS Lambda in Action](https://www
 
 ## Creating role and policy
 
-Before creating a role, it is necessary to create (user-based) policies so that the Lambda function can be given permissions to relevant AWS services. For the POC application, the function needs to download the model object (*admission.rds*) from S3 and to log messages to [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/). For the former, a tailered policy (*ServerlessPOC*) is created while an AWS managed policy (*AWSLambdaBasicExecutionRole*) is used for the latter. In a policy, permissions are defined in statements and the main elements of statments are shown below.
+Before creating a role, it is necessary to create (user-based) policies so that the Lambda function can be given permissions to relevant AWS services. For the POC application, the function needs to download the model object (*admission.rds*) from S3 and to log messages to [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/). For the former, a tailored policy (*ServerlessPOC*) is created while an AWS managed policy (*AWSLambdaBasicExecutionRole*) is used for the latter. In a policy, permissions are defined in statements and the main elements of statments are shown below.
 
 * Effect - Allow or deny
 * Action - What actions are in effect?

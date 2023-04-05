@@ -16,8 +16,8 @@ categories:
   - Serverless
 tags: 
   - AWS
-  - Lambda
-  - API Gateway
+  - AWS Lambda
+  - Amazon API Gateway
   - R
   - Python
 authors:
