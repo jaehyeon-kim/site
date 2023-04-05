@@ -34,3 +34,9 @@ permalinks:
 
 # module:
   # proxy: https://goproxy.cn
+
+markup:
+  tableOfContents:
+    endLevel: 6
+    ordered: false
+    startLevel: 2
