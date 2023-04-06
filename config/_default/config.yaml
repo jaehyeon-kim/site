@@ -36,6 +36,10 @@ permalinks:
   # proxy: https://goproxy.cn
 
 markup:
+  highlight:
+    lineNos: true
+    lineNumbersInTable: false
+    noClasses: false
   tableOfContents:
     endLevel: 6
     ordered: false
