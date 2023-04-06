@@ -1,5 +1,5 @@
-deserilazation
 deserialization
 Flink
 EventBridge
 SoftEther
+Deserializer
