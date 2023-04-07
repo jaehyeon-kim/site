@@ -73,7 +73,7 @@ Prerequisites of building a vue app are
     + used instead of _npm_
     + install globally - `npm install -g yarn`
 
-The apps can be found in _vue-htmlwidgets_ and _vue-native_ folders of this [GitHub repo](https://github.com/jaehyeon-kim/more-thoughts-on-shiny). They are built with [webpack](https://webpack.js.org/) and can be started as following.
+The apps can be found in _vue-htmlwidgets_ and _vue-native_ folders of this [**GitHub repository**](https://github.com/jaehyeon-kim/more-thoughts-on-shiny). They are built with [webpack](https://webpack.js.org/) and can be started as following.
 
 ```bash
 cd path-to-folder

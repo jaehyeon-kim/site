@@ -74,7 +74,7 @@ Note that, if data is transformed for better performance, a model object alone m
 
 ## Lambda function handler
 
-[Lambda function handler](http://docs.aws.amazon.com/lambda/latest/dg/python-programming-model-handler-types.html) is a function that AWS Lambda can invoke when the service executes the code. In this example, it downloads the model objects from S3, predicts admission status and returns the result - *handler.py* and *test_handler.py* can be found in the [GitHub repo](https://github.com/jaehyeon-kim/serverless-poc/tree/master/poc-logit-handler).
+[Lambda function handler](http://docs.aws.amazon.com/lambda/latest/dg/python-programming-model-handler-types.html) is a function that AWS Lambda can invoke when the service executes the code. In this example, it downloads the model objects from S3, predicts admission status and returns the result - *handler.py* and *test_handler.py* can be found in the [**GitHub repository**](https://github.com/jaehyeon-kim/serverless-poc/tree/master/poc-logit-handler).
 
 This and the next sections are based on the following posts with necessary modifications.
 

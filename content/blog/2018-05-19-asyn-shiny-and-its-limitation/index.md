@@ -129,7 +129,7 @@ server <- function(input, output, session) {
 }
 ```
 
-The app code can also be found in this [GitHub repo](https://github.com/jaehyeon-kim/more-thoughts-on-shiny).
+The app code can also be found in this [**GitHub repository**](https://github.com/jaehyeon-kim/more-thoughts-on-shiny).
 
 For deployment, a Docker image is created that includes the *async-compatible* packages, Open Source Shiny Server and RServe. It is available as [rockerextra/shiny-async-dev:3.4](https://hub.docker.com/r/rockerextra/shiny-async-dev/) and its Dockerfile can be found in [this repo](https://github.com/jaehyeon-kim/rocker-extra/blob/3.4/shiny-async-dev/Dockerfile). The app can be deployed with [Docker Compose](https://docs.docker.com/compose/) as can be seen [here](https://github.com/jaehyeon-kim/more-thoughts-on-shiny/blob/master/compose-all/docker-compose.yml).
 

@@ -1,0 +1,40 @@
+MOTIVATION
+
+Let say there is a fictitious company that plans to migrate an on-premises data warehouse into a data lake (spark + iceberg + redshift) on AWS. The engineering team, which also owns AWS infrastructure, mainly develops spark-based data pipelines using scala. Previously data projects were managed by the engineering team but now they think data can be produced more efficienty by each line of business (LOB). Overtime individual LOBs are expected to take more responsibility for data production and the migration project is a starting point. The data engineers of the relevant LOB are new to spark and scala and they have a little bit of experience in python while the majority of work is based on SQL. Thanks to their expertise in SQL, they are able to get started building data transformation logic on jupyter notebooks using pyspark. However they soon find the codebase gets quite bigger even during the minimum valuable product (MVP) phase, which brings concern to extend it to cover the entire data warehouse. Also they notice notebooks make development harder mainly due to lack of modularity and failing to incorporate testing. They asked help to the engineering team but haven't heard good news. The engineering team uses scala and many tools (eg Metorikku) that are successful for them cannot be used directly. Moreover even they don't have a suitable data transformation framework that supports iceberg.
+
+
+
+
+
+
+ and the engineering team guided the LOB with the architecture.  Soon 
+
+For example, they use the metorikku framework for ETL. 
+
+Better Development Environment than Notebooks
+
+I recently worked on a customer project, which aims to migrate a MS SQL data warehouse into data lake (spark + iceberg + redshift). Previously all major data projects were performed by the engineering (+ infrastructure) team and they opened it to a line-of-business (LOB). Yes, they are adopting an idea of data mesh architecture.
+The LOB was new to spark and found it difficult to manage a project that potentially would grow significantly. My team led the MVP product and the codebase was not small if including testing code. The LOB initially proposed a project that only includes redshift but it was rejected by the infra team because it was beyond what the infra team has established - being a large financial institution, the majority of their engineering projects are developed with big data toolsets.
+Overall I wonder how beneficial if there is a universal framework for data transformation that covers both data warehouse and data lake projects. Also it'll be ideal if it supports the emerging open table formats (delta lake, iceberg and hudi).
+Would you think we'd need such framework?
+
+I read an interesting article about where spark fits in modern data stack. (https://towardsdatascience.com/modern-data-stack-which-place-for-spark-8e10365a8772) Here is a quick summary, mainly comparing with Data Build Tool (DBT).
+Clear advantages of DBT
+Flat learning curve - SQL is easier than spark
+Better code organisation - no correct way of organising transformation pipelines with spark
+Some drawbacks of DBT
+Expressiveness - Jinja is quite heavy and verbose, not very readable, and unit-testing Jinja code seems rather tedious
+Limits of SQL + User defined functions - some logics are much easier to implement with UDFs than with SQL code
+Areas where DBT doesn't cover but spark does
+Extract and Load
+Real time
+The Python model of DBT can overcome the drawbacks of DBT. (https://docs.getdbt.com/docs/building-a-dbt-project/building-models/python-models) It allows to apply transformations as DataFrame operations. The beta feature is available on Snowflake, Databricks and BigQuery. Hopefully we can use it on Redshift, Glue and EMR in the near future.
+
+
+Modularity & navigation: Databricks notebooks do not encourage modular code
+Testing & debugging: bug sleuthing on Databricks is challenging
+Version control: better than before but still limited
+Reproducibility: your code and runtime should not be decoupled
+
+
+

@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://github.com/crealytics/spark-excel/issues/242
+HostUrl=https://objects.githubusercontent.com/github-production-repository-file-5c1aeb/67264828/4573778?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20220307%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220307T220505Z&X-Amz-Expires=300&X-Amz-Signature=8c2407e2478f09a676e75a94c6cdcc8fa2b9047d7b535e499742f2fc0915c270&X-Amz-SignedHeaders=host&actor_id=1023748&key_id=0&repo_id=67264828&response-content-disposition=attachment%3Bfilename%3Dspark-defaults.conf.txt&response-content-type=text%2Fplain

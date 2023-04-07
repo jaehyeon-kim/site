@@ -33,7 +33,7 @@ While I'm looking into [Apache Airflow](https://airflow.apache.org/), a workflow
 
 In this post, it'll be illustrated how a web service is created using FastAPI framework where tasks are sent to multiple workers. The workers are built with Celery and Rserve. Redis is used as a message broker/result backend for Celery and a key-value store for Rserve. Demos can be run in both [Docker Compose](https://docs.docker.com/compose/) and [Kubernetes](https://kubernetes.io/).
 
-The following diagram shows how the apps work together and the source can be found in this [GitHub repo](https://github.com/jaehyeon-kim/k8s-job-queue).
+The following diagram shows how the apps work together and the source can be found in this [**GitHub repository**](https://github.com/jaehyeon-kim/k8s-job-queue).
 
 
 ![](arch.png#center)

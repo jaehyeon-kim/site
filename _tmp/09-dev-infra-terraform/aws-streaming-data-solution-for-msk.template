@@ -1,0 +1,1386 @@
+{
+  "Description": "(SO0151) - AWS Streaming Data Solution for Amazon MSK. Version v1.6.0",
+  "Metadata": {
+    "AWS::CloudFormation::Interface": {
+      "ParameterGroups": [
+        {
+          "Label": {
+            "default": "Broker configuration"
+          },
+          "Parameters": [
+            "KafkaVersion",
+            "NumberBrokerNodes",
+            "BrokerInstanceType",
+            "MonitoringLevel",
+            "EbsVolumeSize"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Access control configuration"
+          },
+          "Parameters": [
+            "AccessControlMethod"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Networking configuration"
+          },
+          "Parameters": [
+            "BrokerVpcId",
+            "BrokerSubnetIds"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Client configuration"
+          },
+          "Parameters": [
+            "ClientInstanceType",
+            "ClientAmiId"
+          ]
+        }
+      ],
+      "ParameterLabels": {
+        "KafkaVersion": {
+          "default": "Apache Kafka version on the brokers"
+        },
+        "BrokerInstanceType": {
+          "default": "EC2 instance type that Amazon MSK uses when it creates your brokers"
+        },
+        "NumberBrokerNodes": {
+          "default": "Number of broker nodes you want in the cluster (must be a multiple of the number of subnets)"
+        },
+        "MonitoringLevel": {
+          "default": "Level of monitoring for the cluster"
+        },
+        "EbsVolumeSize": {
+          "default": "EBS storage volume per broker (in GiB)"
+        },
+        "AccessControlMethod": {
+          "default": "Method Amazon MSK uses to authenticate clients and allow or deny actions"
+        },
+        "BrokerVpcId": {
+          "default": "VPC where the cluster should be launched"
+        },
+        "BrokerSubnetIds": {
+          "default": "List of subnets in which brokers are distributed (must contain between 2 and 3 items)"
+        },
+        "ClientInstanceType": {
+          "default": "Instance type for the EC2 instance"
+        },
+        "ClientAmiId": {
+          "default": "Amazon Machine Image for the EC2 instance"
+        }
+      }
+    }
+  },
+  "Parameters": {
+    "KafkaVersion": {
+      "Type": "String",
+      "Default": "2.8.1",
+      "AllowedValues": [
+        "2.8.1",
+        "2.8.0",
+        "2.7.1",
+        "2.7.0",
+        "2.6.2",
+        "2.6.1",
+        "2.6.0",
+        "2.5.1",
+        "2.4.1.1",
+        "2.3.1",
+        "2.2.1"
+      ]
+    },
+    "NumberBrokerNodes": {
+      "Type": "Number",
+      "Default": 3,
+      "MinValue": 2
+    },
+    "BrokerInstanceType": {
+      "Type": "String",
+      "Default": "kafka.m5.large",
+      "AllowedValues": [
+        "kafka.m5.large",
+        "kafka.m5.xlarge",
+        "kafka.m5.2xlarge",
+        "kafka.m5.4xlarge",
+        "kafka.m5.8xlarge",
+        "kafka.m5.12xlarge",
+        "kafka.m5.16xlarge",
+        "kafka.m5.24xlarge",
+        "kafka.t3.small"
+      ]
+    },
+    "MonitoringLevel": {
+      "Type": "String",
+      "Default": "DEFAULT",
+      "AllowedValues": [
+        "DEFAULT",
+        "PER_BROKER",
+        "PER_TOPIC_PER_BROKER",
+        "PER_TOPIC_PER_PARTITION"
+      ]
+    },
+    "EbsVolumeSize": {
+      "Type": "Number",
+      "Default": 1000,
+      "MaxValue": 16384,
+      "MinValue": 1
+    },
+    "AccessControlMethod": {
+      "Type": "String",
+      "Default": "IAM role-based authentication",
+      "AllowedValues": [
+        "Unauthenticated access",
+        "IAM role-based authentication",
+        "SASL/SCRAM authentication"
+      ]
+    },
+    "BrokerVpcId": {
+      "Type": "AWS::EC2::VPC::Id"
+    },
+    "BrokerSubnetIds": {
+      "Type": "List<AWS::EC2::Subnet::Id>"
+    },
+    "ClientInstanceType": {
+      "Type": "String",
+      "Default": "t3.small",
+      "AllowedPattern": ".+",
+      "ConstraintDescription": "Client instance type must not be empty"
+    },
+    "ClientAmiId": {
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+      "Default": "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+    }
+  },
+  "Conditions": {
+    "MskEnableUnauthenticatedConditionAC5589BA": {
+      "Fn::Equals": [
+        {
+          "Ref": "AccessControlMethod"
+        },
+        "Unauthenticated access"
+      ]
+    },
+    "MskEnableIAMConditionE2D163C1": {
+      "Fn::Equals": [
+        {
+          "Ref": "AccessControlMethod"
+        },
+        "IAM role-based authentication"
+      ]
+    },
+    "MskEnableSCRAMCondition17AAAE1C": {
+      "Fn::Equals": [
+        {
+          "Ref": "AccessControlMethod"
+        },
+        "SASL/SCRAM authentication"
+      ]
+    },
+    "SolutionHelperAnonymousDatatoAWSD898118F": {
+      "Fn::Equals": [
+        {
+          "Fn::FindInMap": [
+            "SolutionHelperAnonymousData14B64A81",
+            "SendAnonymousData",
+            "Data"
+          ]
+        },
+        "Yes"
+      ]
+    },
+    "CDKMetadataAvailable": {
+      "Fn::Or": [
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "af-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-northeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ap-southeast-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "ca-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "cn-northwest-1"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-central-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-north-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-2"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "eu-west-3"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "me-south-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "sa-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-east-2"
+              ]
+            }
+          ]
+        },
+        {
+          "Fn::Or": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-1"
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "AWS::Region"
+                },
+                "us-west-2"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Resources": {
+    "MskClusterSGB3B5C6AA": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Security group for the MSK cluster",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "msk-cluster-sg"
+          }
+        ],
+        "VpcId": {
+          "Ref": "BrokerVpcId"
+        }
+      },
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "F1000",
+              "reason": "No egress rule defined as default (all traffic allowed outbound) is sufficient for this resource"
+            }
+          ]
+        }
+      }
+    },
+    "MskIngressRule0A0000376": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "Description": "ZooKeeper Plaintext",
+        "FromPort": 2181,
+        "GroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "SourceSecurityGroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "ToPort": 2181
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/Msk/IngressRule0"
+      }
+    },
+    "MskIngressRule1EBC2335C": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "Description": "ZooKeeper TLS",
+        "FromPort": 2182,
+        "GroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "SourceSecurityGroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "ToPort": 2182
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/Msk/IngressRule1"
+      }
+    },
+    "MskIngressRule2EF72793E": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "Description": "Bootstrap servers Plaintext",
+        "FromPort": 9092,
+        "GroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "SourceSecurityGroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "ToPort": 9092
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/Msk/IngressRule2"
+      }
+    },
+    "MskIngressRule37D7F2DF9": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "Description": "Bootstrap servers TLS",
+        "FromPort": 9094,
+        "GroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "SourceSecurityGroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "ToPort": 9094
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/Msk/IngressRule3"
+      }
+    },
+    "MskIngressRule4FE865F7D": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "Description": "SASL/SCRAM",
+        "FromPort": 9096,
+        "GroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "SourceSecurityGroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "ToPort": 9096
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/Msk/IngressRule4"
+      }
+    },
+    "MskIngressRule55E8196D0": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "Description": "IAM",
+        "FromPort": 9098,
+        "GroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "SourceSecurityGroupId": {
+          "Ref": "MskClusterSGB3B5C6AA"
+        },
+        "ToPort": 9098
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/Msk/IngressRule5"
+      }
+    },
+    "MskLogGroup467685ED": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "RetentionInDays": 731
+      },
+      "UpdateReplacePolicy": "Retain",
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W84",
+              "reason": "Log group data is always encrypted in CloudWatch Logs using an AWS Managed KMS Key"
+            }
+          ]
+        }
+      }
+    },
+    "MskKafkaCluster8932446B": {
+      "Type": "AWS::MSK::Cluster",
+      "Properties": {
+        "BrokerNodeGroupInfo": {
+          "BrokerAZDistribution": "DEFAULT",
+          "ClientSubnets": {
+            "Ref": "BrokerSubnetIds"
+          },
+          "InstanceType": {
+            "Ref": "BrokerInstanceType"
+          },
+          "SecurityGroups": [
+            {
+              "Ref": "MskClusterSGB3B5C6AA"
+            }
+          ],
+          "StorageInfo": {
+            "EBSStorageInfo": {
+              "VolumeSize": {
+                "Ref": "EbsVolumeSize"
+              }
+            }
+          }
+        },
+        "ClusterName": {
+          "Fn::Join": [
+            "-",
+            [
+              "kafka-cluster",
+              {
+                "Ref": "AWS::AccountId"
+              }
+            ]
+          ]
+        },
+        "KafkaVersion": {
+          "Ref": "KafkaVersion"
+        },
+        "NumberOfBrokerNodes": {
+          "Ref": "NumberBrokerNodes"
+        },
+        "ClientAuthentication": {
+          "Sasl": {
+            "Iam": {
+              "Enabled": {
+                "Fn::If": [
+                  "MskEnableIAMConditionE2D163C1",
+                  true,
+                  false
+                ]
+              }
+            },
+            "Scram": {
+              "Enabled": {
+                "Fn::If": [
+                  "MskEnableSCRAMCondition17AAAE1C",
+                  true,
+                  false
+                ]
+              }
+            }
+          },
+          "Unauthenticated": {
+            "Enabled": {
+              "Fn::If": [
+                "MskEnableUnauthenticatedConditionAC5589BA",
+                true,
+                false
+              ]
+            }
+          }
+        },
+        "EncryptionInfo": {
+          "EncryptionAtRest": {
+            "DataVolumeKMSKeyId": "alias/aws/kafka"
+          },
+          "EncryptionInTransit": {
+            "ClientBroker": "TLS",
+            "InCluster": true
+          }
+        },
+        "EnhancedMonitoring": {
+          "Ref": "MonitoringLevel"
+        },
+        "LoggingInfo": {
+          "BrokerLogs": {
+            "CloudWatchLogs": {
+              "Enabled": true,
+              "LogGroup": {
+                "Ref": "MskLogGroup467685ED"
+              }
+            }
+          }
+        },
+        "OpenMonitoring": {
+          "Prometheus": {
+            "JmxExporter": {
+              "EnabledInBroker": true
+            },
+            "NodeExporter": {
+              "EnabledInBroker": true
+            }
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/Msk/KafkaCluster"
+      }
+    },
+    "EC2Role36C2E297": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "ec2.",
+                      {
+                        "Ref": "AWS::URLSuffix"
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/EC2/Role/Resource"
+      }
+    },
+    "EC2SessionManagerPolicyC5BA6463": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "ssm:UpdateInstanceInformation",
+                "ssmmessages:CreateControlChannel",
+                "ssmmessages:CreateDataChannel",
+                "ssmmessages:OpenControlChannel",
+                "ssmmessages:OpenDataChannel"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "EC2SessionManagerPolicyC5BA6463",
+        "Roles": [
+          {
+            "Ref": "EC2Role36C2E297"
+          }
+        ]
+      },
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W12",
+              "reason": "Session Manager actions do not support resource level permissions"
+            }
+          ]
+        }
+      }
+    },
+    "EC2MskPolicy430128DF": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "kafka:DescribeCluster",
+                "kafka:GetBootstrapBrokers"
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+              "Sid": "ClusterMetadata"
+            },
+            {
+              "Action": [
+                "kafka-cluster:Connect",
+                "kafka-cluster:DescribeCluster",
+                "kafka-cluster:AlterGroup",
+                "kafka-cluster:DescribeGroup",
+                "kafka-cluster:DeleteGroup"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":kafka:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":cluster/",
+                      {
+                        "Fn::Join": [
+                          "-",
+                          [
+                            "kafka-cluster",
+                            {
+                              "Ref": "AWS::AccountId"
+                            }
+                          ]
+                        ]
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":kafka:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":group/",
+                      {
+                        "Fn::Join": [
+                          "-",
+                          [
+                            "kafka-cluster",
+                            {
+                              "Ref": "AWS::AccountId"
+                            }
+                          ]
+                        ]
+                      },
+                      "/*/*"
+                    ]
+                  ]
+                }
+              ],
+              "Sid": "ClusterAPIs"
+            },
+            {
+              "Action": [
+                "kafka-cluster:*Topic*",
+                "kafka-cluster:WriteData"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":kafka:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topic/",
+                    {
+                      "Fn::Join": [
+                        "-",
+                        [
+                          "kafka-cluster",
+                          {
+                            "Ref": "AWS::AccountId"
+                          }
+                        ]
+                      ]
+                    },
+                    "/*/*"
+                  ]
+                ]
+              },
+              "Sid": "ProducerAPIs"
+            },
+            {
+              "Action": [
+                "kafka-cluster:*Topic*",
+                "kafka-cluster:ReadData"
+              ],
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":kafka:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":topic/",
+                    {
+                      "Fn::Join": [
+                        "-",
+                        [
+                          "kafka-cluster",
+                          {
+                            "Ref": "AWS::AccountId"
+                          }
+                        ]
+                      ]
+                    },
+                    "/*/*"
+                  ]
+                ]
+              },
+              "Sid": "ConsumerAPIs"
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "PolicyName": "EC2MskPolicy430128DF",
+        "Roles": [
+          {
+            "Ref": "EC2Role36C2E297"
+          }
+        ]
+      },
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W12",
+              "reason": "MSK actions do not support resource level permissions"
+            }
+          ]
+        }
+      }
+    },
+    "EC2InstanceProfile44610A09": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "EC2Role36C2E297"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/EC2/InstanceProfile"
+      }
+    },
+    "EC2ClientF0F91320": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "IamInstanceProfile": {
+          "Ref": "EC2InstanceProfile44610A09"
+        },
+        "ImageId": {
+          "Ref": "ClientAmiId"
+        },
+        "InstanceType": {
+          "Ref": "ClientInstanceType"
+        },
+        "SecurityGroupIds": [
+          {
+            "Ref": "MskClusterSGB3B5C6AA"
+          }
+        ],
+        "SubnetId": {
+          "Fn::Select": [
+            0,
+            {
+              "Ref": "BrokerSubnetIds"
+            }
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "KafkaClient"
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash\nyum update -y\nyum install java-11-amazon-corretto-headless python3 -y\nmkdir -p /home/kafka && cd /home/kafka\nwget https://archive.apache.org/dist/kafka/",
+                {
+                  "Ref": "KafkaVersion"
+                },
+                "/kafka_2.12-",
+                {
+                  "Ref": "KafkaVersion"
+                },
+                ".tgz\ntar -xzf kafka_2.12-",
+                {
+                  "Ref": "KafkaVersion"
+                },
+                ".tgz --strip 1 && rm kafka_2.12-",
+                {
+                  "Ref": "KafkaVersion"
+                },
+                ".tgz\nwget https://github.com/aws/aws-msk-iam-auth/releases/download/1.1.0/aws-msk-iam-auth-1.1.0-all.jar\nmv aws-msk-iam-auth-1.1.0-all.jar ./libs\nfind /usr/lib/jvm/ -name \"cacerts\" | xargs -I '{}' cp '{}' /tmp/kafka.client.truststore.jks\ntouch bin/client-ssl.properties\necho \"security.protocol=SSL\" >> bin/client-ssl.properties\necho \"ssl.truststore.location=/tmp/kafka.client.truststore.jks\" >> bin/client-ssl.properties\ntouch bin/client-sasl.properties\necho \"security.protocol=SASL_SSL\" >> bin/client-sasl.properties\necho \"sasl.mechanism=SCRAM-SHA-512\" >> bin/client-sasl.properties\necho \"ssl.truststore.location=/tmp/kafka.client.truststore.jks\" >> bin/client-sasl.properties\ntouch bin/client-iam.properties\necho \"security.protocol=SASL_SSL\" >> bin/client-iam.properties\necho \"sasl.mechanism=AWS_MSK_IAM\" >> bin/client-iam.properties\necho \"sasl.jaas.config = software.amazon.msk.auth.iam.IAMLoginModule required;\" >> bin/client-iam.properties\necho \"sasl.client.callback.handler.class = software.amazon.msk.auth.iam.IAMClientCallbackHandler\" >> bin/client-iam.properties"
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/EC2/Client"
+      }
+    },
+    "SolutionHelperRoleC017C62A": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":logs:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ":log-group:/aws/lambda/*"
+                      ]
+                    ]
+                  }
+                }
+              ],
+              "Version": "2012-10-17"
+            },
+            "PolicyName": "CloudWatchLogsPolicy"
+          }
+        ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/SolutionHelper/Role/Role/Resource"
+      }
+    },
+    "SolutionHelper4825923B": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "solutions-${AWS::Region}"
+          },
+          "S3Key": "aws-streaming-data-solution-for-amazon-msk/v1.6.0/asset35eb3d2be0fc6a75b3db72b0c25196a41b3a51b9805660e9dc7d6f73048b8407.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "SolutionHelperRoleC017C62A",
+            "Arn"
+          ]
+        },
+        "Description": "This function generates UUID for each deployment and sends anonymous data to the AWS Solutions team",
+        "Environment": {
+          "Variables": {
+            "AWS_SDK_USER_AGENT": "{ \"user_agent_extra\": \"AwsSolution/SO0151/v1.6.0\" }"
+          }
+        },
+        "Handler": "lambda_function.handler",
+        "Runtime": "python3.8",
+        "Timeout": 30
+      },
+      "DependsOn": [
+        "SolutionHelperRoleC017C62A"
+      ],
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W89",
+              "reason": "This function does not need to be deployed in a VPC"
+            },
+            {
+              "id": "W92",
+              "reason": "This function does not require reserved concurrency"
+            }
+          ]
+        }
+      },
+      "Condition": "SolutionHelperAnonymousDatatoAWSD898118F"
+    },
+    "SolutionHelperCreateUniqueIDAF03406A": {
+      "Type": "Custom::CreateUUID",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "SolutionHelper4825923B",
+            "Arn"
+          ]
+        },
+        "Resource": "UUID"
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/SolutionHelper/CreateUniqueID/Default"
+      },
+      "Condition": "SolutionHelperAnonymousDatatoAWSD898118F"
+    },
+    "SolutionHelperSendAnonymousData9B19E31D": {
+      "Type": "Custom::AnonymousData",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "SolutionHelper4825923B",
+            "Arn"
+          ]
+        },
+        "Resource": "AnonymousMetric",
+        "UUID": {
+          "Fn::GetAtt": [
+            "SolutionHelperCreateUniqueIDAF03406A",
+            "UUID"
+          ]
+        },
+        "Region": {
+          "Ref": "AWS::Region"
+        },
+        "SolutionId": "SO0151",
+        "Version": "v1.6.0",
+        "Pattern": "MskStandalone",
+        "NumberOfBrokerNodes": {
+          "Ref": "NumberBrokerNodes"
+        },
+        "BrokerInstanceType": {
+          "Ref": "BrokerInstanceType"
+        },
+        "MonitoringLevel": {
+          "Ref": "MonitoringLevel"
+        },
+        "AccessControlMethod": {
+          "Ref": "AccessControlMethod"
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/SolutionHelper/SendAnonymousData/Default"
+      },
+      "Condition": "SolutionHelperAnonymousDatatoAWSD898118F"
+    },
+    "MonitoringRole4BF58EFD": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              }
+            }
+          ],
+          "Version": "2012-10-17"
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":logs:",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        ":",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ":log-group:/aws/lambda/*"
+                      ]
+                    ]
+                  }
+                }
+              ],
+              "Version": "2012-10-17"
+            },
+            "PolicyName": "CloudWatchLogsPolicy"
+          },
+          {
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Action": [
+                    "cloudwatch:PutDashboard",
+                    "cloudwatch:DeleteDashboards"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        ":cloudwatch::",
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        ":dashboard/",
+                        {
+                          "Fn::Join": [
+                            "-",
+                            [
+                              "MSK1-Monitoring",
+                              {
+                                "Ref": "AWS::Region"
+                              }
+                            ]
+                          ]
+                        }
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Action": "kafka:DescribeCluster",
+                  "Effect": "Allow",
+                  "Resource": "*"
+                }
+              ],
+              "Version": "2012-10-17"
+            },
+            "PolicyName": "DashboardPolicy"
+          }
+        ]
+      },
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W11",
+              "reason": "DescribeCluster does not support resource level permissions"
+            }
+          ]
+        }
+      }
+    },
+    "MonitoringFunction76E68B38": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Fn::Sub": "solutions-${AWS::Region}"
+          },
+          "S3Key": "aws-streaming-data-solution-for-amazon-msk/v1.6.0/asset36220e5380786882452aee710f5b71a35437fd885ac021fb091de2c70f423b82.zip"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "MonitoringRole4BF58EFD",
+            "Arn"
+          ]
+        },
+        "Description": "This function creates a dashboard that monitors the health of a MSK cluster",
+        "Environment": {
+          "Variables": {
+            "AWS_SDK_USER_AGENT": "{ \"user_agent_extra\": \"AwsSolution/SO0151/v1.6.0\" }"
+          }
+        },
+        "Handler": "lambda_function.handler",
+        "Runtime": "python3.8",
+        "Timeout": 30
+      },
+      "DependsOn": [
+        "MonitoringRole4BF58EFD"
+      ],
+      "Metadata": {
+        "cfn_nag": {
+          "rules_to_suppress": [
+            {
+              "id": "W89",
+              "reason": "This function does not need to be deployed in a VPC"
+            },
+            {
+              "id": "W92",
+              "reason": "This function does not require reserved concurrency"
+            }
+          ]
+        }
+      }
+    },
+    "MonitoringDashboardCR0C25BCB3": {
+      "Type": "Custom::CloudWatchDashboard",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "MonitoringFunction76E68B38",
+            "Arn"
+          ]
+        },
+        "ClusterArn": {
+          "Ref": "MskKafkaCluster8932446B"
+        },
+        "DashboardName": {
+          "Fn::Join": [
+            "-",
+            [
+              "MSK1-Monitoring",
+              {
+                "Ref": "AWS::Region"
+              }
+            ]
+          ]
+        },
+        "Region": {
+          "Ref": "AWS::Region"
+        }
+      },
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete",
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/Monitoring/DashboardCR/Default"
+      }
+    },
+    "CDKMetadata": {
+      "Type": "AWS::CDK::Metadata",
+      "Properties": {
+        "Analytics": "v2:deflate64:H4sIAAAAAAAA/12PwU7DMBBEv6V3Z0sCgis0EqgSiCj9AuNsIzexN/LaoMryv2O3SoU47czI631TQ908wt3mWf5wpYZpGxU5hHjwUk2iPdpOOmnQoxMtWfYuKF/ibAbtNdliPuSyaDuKF2b0eXMspg3syfTIFJzC8uyv/gx+CT6JcjaiaiDm8IAqOO3Pb47CIv4Hezs6ZC75PpNIqzCJmUaG+E7jbWfVSRieoKDOmSTza2kg9jRfWcrsaNbqfGl5U+vXnaOjnssFab4GCfE1WLUWXnUSfF/J0prhUj572AU1od9JxpSEpQHhxNvv+gHqJ2g2J9a6csF6bRD66/wFjynn94UBAAA="
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-streaming-data-solution-for-msk/CDKMetadata/Default"
+      },
+      "Condition": "CDKMetadataAvailable"
+    }
+  },
+  "Mappings": {
+    "SolutionHelperAnonymousData14B64A81": {
+      "SendAnonymousData": {
+        "Data": "Yes"
+      }
+    }
+  },
+  "Outputs": {
+    "MskClusterArn": {
+      "Description": "ARN of the Amazon MSK cluster",
+      "Value": {
+        "Ref": "MskKafkaCluster8932446B"
+      }
+    },
+    "MskClusterSecurityGroupId": {
+      "Description": "ID of the security group for the Amazon MSK cluster",
+      "Value": {
+        "Ref": "MskClusterSGB3B5C6AA"
+      }
+    },
+    "ClientInstanceId": {
+      "Description": "ID of the client Amazon EC2 instance",
+      "Value": {
+        "Ref": "EC2ClientF0F91320"
+      }
+    },
+    "CloudWatchDashboardName": {
+      "Description": "Name of the Amazon CloudWatch dashboard",
+      "Value": {
+        "Fn::Join": [
+          "-",
+          [
+            "MSK1-Monitoring",
+            {
+              "Ref": "AWS::Region"
+            }
+          ]
+        ]
+      }
+    }
+  }
+}
