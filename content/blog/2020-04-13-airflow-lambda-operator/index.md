@@ -15,9 +15,9 @@ featuredImage: false
 categories:
   - Data Engineering
 tags: 
-  - Airflow
   - AWS
   - AWS Lambda
+  - Apache Airflow
   - Python
   - Docker
   - Docker Compose

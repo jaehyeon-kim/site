@@ -10,16 +10,16 @@ reward: false
 pinned: false
 carousel: false
 featuredImage: false
-series:
-  - Data Lake Demo Using Change Data Capture
+# series:
+#   - Data Lake Demo Using Change Data Capture
 categories:
   - Data Engineering
 tags: 
-- AWS
-- Amazon EMR
-- Amazon EKS
-- Apache Spark
-- Kubernetes
+  - AWS
+  - Amazon EMR
+  - Amazon EKS
+  - Apache Spark
+  - Kubernetes
 authors:
   - JaehyeonKim
 images: []
@@ -74,7 +74,7 @@ tree -p config -p manifests
 We'll configure logging on S3 and CloudWatch so that a S3 bucket and CloudWatch log group are created. Also a Glue database is created as I encountered an error to create a Glue table when the database doesn't exist. Finally the files in the _config_ folder are uploaded to S3.
 
 
-```
+```bash
 #### create S3 bucket/log group/glue database and upload files to S3
 aws s3 mb s3://${S3_BUCKET_NAME}
 aws logs create-log-group --log-group-name=${LOG_GROUP_NAME}
@@ -101,7 +101,7 @@ for f in $(ls ./config/)
 We can use either command line options or a [config file](https://eksctl.io/usage/schema/) when creating a cluster or node group using _eksctl_. We'll use config files and below shows the corresponding config files.
 
 
-```
+```yaml
 # ./config/cluster.yaml
 ---
 apiVersion: eksctl.io/v1alpha5
@@ -133,7 +133,7 @@ managedNodeGroups:
 _eksctl _creates a cluster or node group via CloudFormation. Each command will create a dedicated CloudFormation stack and it'll take about 15 minutes. Also it generates the default [kubeconfig](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) file in the _$HOME/.kube_ folder. Once the node group is created, we can check it using the _kubectl_ command.
 
 
-```
+```bash
 #### create cluster, node group and configure
 eksctl create cluster -f ./manifests/cluster.yaml
 eksctl create nodegroup -f ./manifests/nodegroup.yaml
@@ -662,7 +662,7 @@ Finally, the details of the table can be queried in Athena.
 The resources that are created for this post can be deleted using _aws cli_ and _eksctl_ as shown below.
 
 
-```
+```bash
 ## delete virtual cluster
 export JOB_RUN_ID=$(aws emr-containers list-job-runs --virtual-cluster-id ${VIRTUAL_CLUSTER_ID} --query "jobRuns[?name=='cdc-events'].id" --output text)
 aws emr-containers cancel-job-run --id ${JOB_RUN_ID} \

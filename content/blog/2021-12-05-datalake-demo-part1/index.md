@@ -15,17 +15,17 @@ series:
 categories:
   - Data Engineering
 tags: 
-- AWS
-- Amazon EMR
-- Amazon MSK
-- Amazon MSK Connect
-- Apache Spark
-- Apache Hudi
-- Apache Kafka
-- Change Data Capture
-- Data Lake
-- Docker
-- Docker Compose
+  - AWS
+  - Amazon EMR
+  - Amazon MSK
+  - Amazon MSK Connect
+  - Apache Spark
+  - Apache Hudi
+  - Apache Kafka
+  - Change Data Capture
+  - Data Lake
+  - Docker
+  - Docker Compose
 authors:
   - JaehyeonKim
 images: []
@@ -35,8 +35,8 @@ cevo: 5
 [Change data capture (CDC)](https://www.redhat.com/en/topics/integration/what-is-change-data-capture#what-is-cdc) is a proven data integration pattern that has a wide range of applications. Among those, data replication to data lakes is a good use case in data engineering. Coupled with [best-in-breed data lake formats](https://lakefs.io/hudi-iceberg-and-delta-lake-data-lake-table-formats-compared/) such as [Apache Hudi](https://hudi.apache.org/), we can build an efficient data replication solution. This is the first post of the data lake demo series. Over time, we'll build a data lake that uses CDC. As a starting point, we'll discuss the source database and CDC streaming infrastructure in the local environment.
 
 * [Part 1 Local Development](#) (this post)
-* [Part 2 Implement CDC](/blog/2021-12-05-datalake-demo-part2)
-* [Part 3 Implement Data Lake](/blog/2021-12-05-datalake-demo-part3)
+* [Part 2 Implement CDC](/blog/2021-12-12-datalake-demo-part2)
+* [Part 3 Implement Data Lake](/blog/2021-12-19-datalake-demo-part3)
 
 ## Architecture
 

@@ -15,17 +15,17 @@ series:
 categories:
   - Data Engineering
 tags: 
-- AWS
-- Amazon EMR
-- Amazon MSK
-- Amazon MSK Connect
-- Apache Spark
-- Apache Hudi
-- Apache Kafka
-- Change Data Capture
-- Data Lake
-- Docker
-- Docker Compose
+  - AWS
+  - Amazon EMR
+  - Amazon MSK
+  - Amazon MSK Connect
+  - Apache Spark
+  - Apache Hudi
+  - Apache Kafka
+  - Change Data Capture
+  - Data Lake
+  - Docker
+  - Terraform
 authors:
   - JaehyeonKim
 images: []
@@ -36,7 +36,7 @@ In the [previous post](/blog/2021-12-05-datalake-demo-part1), we discussed a dat
 
 * [Part 1 Local Development](/blog/2021-12-05-datalake-demo-part1)
 * [Part 2 Implement CDC](#) (this post)
-* [Part 3 Implement Data Lake](/blog/2021-12-05-datalake-demo-part3)
+* [Part 3 Implement Data Lake](/blog/2021-12-19-datalake-demo-part3)
 
 ## Architecture
 

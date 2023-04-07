@@ -51,8 +51,7 @@ Indicator
 
 ### Permission Specification on Directive
 
-
-    A [directive ](https://www.apollographql.com/docs/apollo-server/schema/directives/)decorates part of a GraphQL schema or operation with additional configuration. Tools like Apollo Server (and Apollo Client) can read a GraphQL document's directives and perform custom logic as appropriate.
+> A [directive ](https://www.apollographql.com/docs/apollo-server/schema/directives/) decorates part of a GraphQL schema or operation with additional configuration. Tools like Apollo Server (and Apollo Client) can read a GraphQL document's directives and perform custom logic as appropriate.
 
 A directive can be useful to define permission. Below shows the type definitions used to meet the authorization requirements listed above. For example, the auth directive (_@auth_) is applied to the _project_ query where _admin_ and _member_ are required for the user groups and _contributor_ for the project user group. 
 
@@ -106,7 +105,7 @@ const typeDefs = gql`
 
 ### Policy Building Using Oso
 
-    [Oso](https://www.osohq.com/) is a batteries-included library for building authorization in your application. Oso gives you a mental model and an authorization system – a set of APIs built on top of a declarative policy language called Polar, plus a debugger and REPL – to define who can do what in your application. You can express common concepts from “users can see their own data” and role-based access control, to others like multi-tenancy, organizations and teams, hierarchies and relationships.
+> [Oso](https://www.osohq.com/) is a batteries-included library for building authorization in your application. Oso gives you a mental model and an authorization system – a set of APIs built on top of a declarative policy language called Polar, plus a debugger and REPL – to define who can do what in your application. You can express common concepts from “users can see their own data” and role-based access control, to others like multi-tenancy, organizations and teams, hierarchies and relationships.
 
 An authorization policy is a set of logical rules for who is allowed to access what resources in an application. For example, the policy that describes the _get:project <span style="text-decoration:underline;">action</span>_ allows the _<span style="text-decoration:underline;">actor</span>_ _(user)_ to perform it on the _project <span style="text-decoration:underline;">resource</span>_ if he/she belongs to required user or project groups. The actor and resource can be either a custom class or one of the [built-in classes](https://docs.osohq.com/node/getting-started/policies.html) (Dictionary, List, String …). Note methods of a custom class can be used instead of built-in operations as well.
 

@@ -28,3 +28,6 @@ JSONB
 upserted
 SASL
 EKS
+VSCode
+Kubenetes
+PYTHONPATH
