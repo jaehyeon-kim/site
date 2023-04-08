@@ -1,7 +1,7 @@
 ---
 title: Integrate Glue Schema Registry with Your Python Kafka App
 date: 2023-04-12
-draft: false
+draft: true
 featured: false
 draft: false
 comment: true
