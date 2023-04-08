@@ -99,7 +99,7 @@ sidebar:
   # collapsed: true # Collapse sidebar widgets by default on small screens.
 
 codeBlock:
-  maxLines: 10
+  maxLines: 20
   lineNos: true # true/false represents that show/hide the line numbers by default.
 
 post:
@@ -240,7 +240,7 @@ pwa:
     #   src: /images/icons/icon-144x144.png
 
 contact:
-  # endpoint: https://getform.io/f/56041c81-9e03-4c24-b9c5-61238854d4cd # Backend endpoint, remove this line if you're using Netlify.
+  endpoint: https://getform.io/f/80e75c25-eb65-4531-a585-4b740e7d5a07 # Backend endpoint, remove this line if you're using Netlify.
   # file: true # Enable file upload
   # fileField: image # The name of file field.
   # reCaptcha:
