@@ -42,7 +42,7 @@ Below shows an overview diagram of the scope of this dbt on AWS series. EMR is h
 
 ## Infrastructure
 
-The infrastructure hosting this solution leverages an Amazon EMR cluster and a S3 bucket. We also need a VPN server so that a developer can connect to the EMR cluster in a private subnet. It is extended from a [previous post](https://cevo.com.au/post/simplify-your-development-on-aws-with-terraform/) and the resources covered there (VPC, subnets, auto scaling group for VPN etc) are not repeated. All resources are deployed using Terraform and the source can be found in the [**GitHub repository**](https://github.com/jaehyeon-kim/dbt-on-aws) of this post.
+The infrastructure hosting this solution leverages an Amazon EMR cluster and a S3 bucket. We also need a VPN server so that a developer can connect to the EMR cluster in a private subnet. It is extended from a [previous post](/blog/2022-02-06-dev-infra-terraform) and the resources covered there (VPC, subnets, auto scaling group for VPN etc) are not repeated. All resources are deployed using Terraform and the source can be found in the [**GitHub repository**](https://github.com/jaehyeon-kim/dbt-on-aws) of this post.
 
 
 ### EMR Cluster
@@ -422,7 +422,7 @@ models:
 ```
 
 
-While we created source tables using Glue crawlers in [part 2](https://cevo.com.au/post/dbt-on-aws-part-2/), they are created directly from S3 by the [dbt_external_tables](https://hub.getdbt.com/dbt-labs/dbt_external_tables/latest/) package in this post. Also, the [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) package is installed for adding tests to the final marts models. They can be installed by the [dbt deps command](https://docs.getdbt.com/reference/commands/deps).
+While we created source tables using Glue crawlers in [part 2](/blog/2021-12-12-datalake-demo-part2), they are created directly from S3 by the [dbt_external_tables](https://hub.getdbt.com/dbt-labs/dbt_external_tables/latest/) package in this post. Also, the [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) package is installed for adding tests to the final marts models. They can be installed by the [dbt deps command](https://docs.getdbt.com/reference/commands/deps).
 
 
 ```yaml

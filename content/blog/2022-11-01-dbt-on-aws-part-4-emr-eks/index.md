@@ -42,7 +42,7 @@ Below shows an overview diagram of the scope of this dbt on AWS series. EMR is h
 
 ## Infrastructure
 
-The main infrastructure hosting this solution leverages an Amazon EKS cluster and EMR virtual cluster. As discussed in [one of the earlier posts](https://cevo.com.au/post/manage-emr-on-eks-with-terraform/), EMR job pods (controller, driver and executors) can be configured to be managed by [Karpenter](https://karpenter.sh/), which simplifies autoscaling by provisioning just-in-time capacity as well as reduces scheduling latency. While the infrastructure elements are discussed in depth in the [earlier post](https://cevo.com.au/post/manage-emr-on-eks-with-terraform/) and [part 3](https://cevo.com.au/post/dbt-on-aws-part-3/), this section focuses on how to set up a long-running Thrift JDBC/ODBC server on EMR on EKS, which is a critical part of using the [dbt-spark](https://github.com/dbt-labs/dbt-spark) adapter. The source can be found in the [**GitHub repository**](https://github.com/jaehyeon-kim/dbt-on-aws) of this post.
+The main infrastructure hosting this solution leverages an Amazon EKS cluster and EMR virtual cluster. As discussed in [one of the earlier posts](/blog/2022-02-06-dev-infra-terraform), EMR job pods (controller, driver and executors) can be configured to be managed by [Karpenter](https://karpenter.sh/), which simplifies autoscaling by provisioning just-in-time capacity as well as reduces scheduling latency. While the infrastructure elements are discussed in depth in the [earlier post](/blog/2022-08-26-emr-on-eks-with-terraform) and [part 3](/blog/2022-10-19-dbt-on-aws-part-3-emr-ec2), this section focuses on how to set up a long-running Thrift JDBC/ODBC server on EMR on EKS, which is a critical part of using the [dbt-spark](https://github.com/dbt-labs/dbt-spark) adapter. The source can be found in the [**GitHub repository**](https://github.com/jaehyeon-kim/dbt-on-aws) of this post.
 
 
 ### Thrift JDBC/ODBC Server
@@ -419,7 +419,7 @@ models:
 ```
 
 
-While we created source tables using Glue crawlers in [part 2](https://cevo.com.au/post/dbt-on-aws-part-2/), they are created directly from S3 by the [dbt_external_tables](https://hub.getdbt.com/dbt-labs/dbt_external_tables/latest/) package in this post. Also the [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) package is installed for adding tests to the final marts models. They can be installed by the [dbt deps command](https://docs.getdbt.com/reference/commands/deps).
+While we created source tables using Glue crawlers in [part 2](/blog/2022-10-09-dbt-on-aws-part-2-glue), they are created directly from S3 by the [dbt_external_tables](https://hub.getdbt.com/dbt-labs/dbt_external_tables/latest/) package in this post. Also the [dbt_utils](https://hub.getdbt.com/dbt-labs/dbt_utils/latest/) package is installed for adding tests to the final marts models. They can be installed by the [dbt deps command](https://docs.getdbt.com/reference/commands/deps).
 
 
 ```yaml

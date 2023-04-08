@@ -42,7 +42,7 @@ Below shows an updated CDC architecture with a schema registry. The Debezium con
 
 ## Infrastructure
 
-The main AWS resources will be deployed to private subnets of a VPC and connection between those will be managed by updating security group inbound rules. For example, the MSK connectors should have access to the registry service and the connectors' security group ID should be added to the inbound rule of the registry service. As multiple resources are deployed to private subnets, it'll be convenient to set up VPN so that access to them can be made from the developer machine. It can improve developer experience significantly. We'll use [Terraform](https://www.terraform.io/) for managing the resources on AWS and _how to set up VPC, VPN and Aurora PostgreSQL is discussed in detail in [one of my earlier posts](https://cevo.com.au/post/simplify-your-development-on-aws-with-terraform/)_. In this post, I'll illustrate those that are not covered in the article. The Terraform source can be found in the [**GitHub repository** for this post](https://github.com/jaehyeon-kim/msk-connect-schema-registry/tree/main/infra).
+The main AWS resources will be deployed to private subnets of a VPC and connection between those will be managed by updating security group inbound rules. For example, the MSK connectors should have access to the registry service and the connectors' security group ID should be added to the inbound rule of the registry service. As multiple resources are deployed to private subnets, it'll be convenient to set up VPN so that access to them can be made from the developer machine. It can improve developer experience significantly. We'll use [Terraform](https://www.terraform.io/) for managing the resources on AWS and _how to set up VPC, VPN and Aurora PostgreSQL is discussed in detail in [one of my earlier posts](/blog/2022-02-06-dev-infra-terraform)_. In this post, I'll illustrate those that are not covered in the article. The Terraform source can be found in the [**GitHub repository** for this post](https://github.com/jaehyeon-kim/msk-connect-schema-registry/tree/main/infra).
 
 
 ### MSK Cluster
@@ -69,7 +69,7 @@ variable "registry_create" {
 ```
 
 
-A simple python application is created to set up the database, and it can be run as shown below. Note [do not forget to connect the VPN](https://cevo.com.au/post/simplify-your-development-on-aws-with-terraform/) before executing the command.
+A simple python application is created to set up the database, and it can be run as shown below. Note [do not forget to connect the VPN](/blog/2022-02-06-dev-infra-terraform) before executing the command.
 
 
 ```bash
@@ -134,7 +134,7 @@ The UI can be checked on a browser as shown below.
 
 ## Create Connectors
 
-Creating custom plugins and connectors is illustrated in detail in [one of my earlier posts](https://cevo.com.au/post/data-lake-demo-using-cdc-part-2/). Here I'll sketch key points only. The custom plugins for the source and sink connectors should include the [Kafka Connect Avro Converter](https://www.confluent.io/hub/confluentinc/kafka-connect-avro-converter) as well. The version 6.0.3 is used, and plugin packaging can be checked in [connect/local/download-connectors.sh](https://github.com/jaehyeon-kim/msk-connect-schema-registry/blob/main/connect/local/download-connectors.sh).
+Creating custom plugins and connectors is illustrated in detail in [one of my earlier posts](/blog/2021-12-12-datalake-demo-part2). Here I'll sketch key points only. The custom plugins for the source and sink connectors should include the [Kafka Connect Avro Converter](https://www.confluent.io/hub/confluentinc/kafka-connect-avro-converter) as well. The version 6.0.3 is used, and plugin packaging can be checked in [connect/local/download-connectors.sh](https://github.com/jaehyeon-kim/msk-connect-schema-registry/blob/main/connect/local/download-connectors.sh).
 
 The [Debezium Postgres Connector](https://debezium.io/documentation/reference/stable/connectors/postgresql.html) is used as the source connector. Here the main difference from the earlier post is using the Confluent Avro Converter class for key and value converter properties and adding the schema registry URL.
 

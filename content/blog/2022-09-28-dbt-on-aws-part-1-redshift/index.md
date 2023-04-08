@@ -100,7 +100,7 @@ resource "aws_redshiftserverless_endpoint_access" "endpoint_access" {
 ```
 
 
-As in the [previous post](https://cevo.com.au/post/simplify-your-development-on-aws-with-terraform/), we connect to Redshift via [SoftEther VPN](https://www.softether.org/) to improve developer experience significantly by accessing the database directly from the developer machine. Instead of providing VPN related secrets as Terraform variables in the earlier post, they are created internally and stored to AWS Secrets Manager. Also, the Redshift admin username and password are included so that the secrets can be accessed securely. The details can be found in [redshift-sls/infra/secrets.tf](https://github.com/jaehyeon-kim/dbt-on-aws/blob/main/redshift-sls/infra/secrets.tf) and the secret string can be retrieved as shown below. 
+As in the [previous post](/blog/2022-02-06-dev-infra-terraform), we connect to Redshift via [SoftEther VPN](https://www.softether.org/) to improve developer experience significantly by accessing the database directly from the developer machine. Instead of providing VPN related secrets as Terraform variables in the earlier post, they are created internally and stored to AWS Secrets Manager. Also, the Redshift admin username and password are included so that the secrets can be accessed securely. The details can be found in [redshift-sls/infra/secrets.tf](https://github.com/jaehyeon-kim/dbt-on-aws/blob/main/redshift-sls/infra/secrets.tf) and the secret string can be retrieved as shown below. 
 
 
 ```bash
